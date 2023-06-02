@@ -292,7 +292,7 @@ void scrollText() {
     }
 }
 
-void play_bgm(int bgm[][3], int bgm_length) {
+void play_bgm(int bgm[][3], int bgm_length) { //bgm 재생
     printf("==========한피스 part 2 시작===========\n");
     double pitch;
     double scale;
