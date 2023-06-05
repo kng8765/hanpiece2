@@ -1,3 +1,16 @@
+/*
+    *프로그래밍 실습 한피스2 과제_20190662 김나경
+    (2) 항해 O
+    (3) 스탯 추가 O
+    (4) 보물상자 발견 이벤트 O
+    (5) 아이템 발견 이벤트 O
+    (6) 전투 이벤트 O
+    (7) 전투 결과 정산 O
+    (8) 게임 종료 O
+    (9) 기타 : 게임 시작 전 BGM 재생(효과음)
+             : 아이템(악마열매_방어) 추가
+ */
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
@@ -82,7 +95,6 @@ void print_player_status() {
 
 int luffy_action() {
     int action;
-
     printf("==========루피 차례===========\n");
     while (1) {
         printf("1. 공격 !\n2. 기 모으기\n==============================\n");
@@ -100,7 +112,6 @@ int luffy_action() {
 
 void luffy_attack(int action) {
     int damage;
-
     switch (action) {
     case LUF_ATTACK:
         damage = luffy.atk;
@@ -110,15 +121,12 @@ void luffy_attack(int action) {
         printf("\n루피의 공격 : '고무고무 총!' x %d\n", (int)pow(2, luffy.state));
         printf("루피 atk : %d\n\n", luffy.atk + atk);
         damage = damage * (int)pow(2, luffy.state);
-        // 방어력 반감 시킬것인지
-        if (crocodile.state > 0) {
+        if (crocodile.state > 0) { // 방어력 반감 시킬것인지
             damage = damage / 2;
             printf("크로커다일의 방어로 데미지가 반감됩니다. (데미지 %d)\n", damage);
         }
         printf("크로커다일 %d - %d = %d\n", crocodile.hp, damage, crocodile.hp - damage);
-        // 피깍음
         crocodile.hp -= damage;
-        // 루피 배수 줄이기
         luffy.state = 0;
         break;
     case LUF_HOLD:
@@ -225,38 +233,30 @@ void battle() {
 
 void event() {
     int evt = RandomNumber(1, 4);
-
     if (evt == 1) { //보물상자
-        printf("\n*********************\n");
-        printf("보물상자를 발견했다 !\n");
+        printf("\n*********************\n보물상자를 발견했다 !\n");
         get_gold = RandomNumber(0, 500);
         printf("보물상자에서 %d골드를 발견했다\n", get_gold);
         gold += get_gold;
-        //check_gold();
         Sleep(3000);
     }
     else if (evt == 2) { //아이템
-        printf("\n*********************\n");
-        printf("아이템을 발견했다!\n");
+        printf("\n*********************\n아이템을 발견했다!\n");
         atk = RandomNumber(5, 10);
         printf("루피의 추가 공격력이 %d이(가) 되었다.", atk);
         Sleep(3000);
-
     }
     else if (evt == 3) { //배틀
-        printf("\n*********************\n");
-        printf("아니! 저 녀석은 칠무해 크로커다일 !");
+        printf("\n*********************\n아니! 저 녀석은 칠무해 크로커다일 !\n");
         init();
         battle();
         Sleep(3000);
     }
     else if (evt == 4) { //아이템 2
-        printf("\n*********************\n");
-        printf("아이템을 발견했다!\n");
+        printf("\n*********************\n아이템을 발견했다!\n");
         apple = RandomNumber(1, 3);
         printf("루피가 악마의 열매 %d개를 흭득했다.", apple);
         Sleep(3000);
-
     }
 }
 
@@ -266,22 +266,16 @@ void scrollText() {
     int currentPosition = textLength - 1;
     while (!check_gold()) {
         system("cls");
-        printf("소지금 : %d골드\n", gold);
-        printf("공격력 : %d\n", atk);
-        printf("악마열매 : %d (회 방어 가능)\n",apple);
+        printf("소지금 : %d골드\n공격력 : %d\n악마열매 : %d (회 방어 가능)\n", gold, atk, apple);
+
         printf("*********************\n");
         for (int i = 0; i < textLength - 1; i++) {
-            if (i == currentPosition) {
-                if (currentPosition == 10) {
-                    printf("!");
-                    event();
-                    break;
-                }
-                printf("?");
+            if (i == currentPosition && currentPosition == 10) { // 이벤트!
+                printf("!");
+                event();
+                break;
             }
-            else {
-                printf("%c", text[i]);
-            }
+            printf("%c", (i == currentPosition) ? '?' : text[i]);
         }
         printf("\n*********************\n");
         Sleep(200);
@@ -292,7 +286,7 @@ void scrollText() {
     }
 }
 
-void play_bgm(int bgm[][3], int bgm_length) { //bgm 재생
+void play_bgm(int bgm[][3], int bgm_length) { //추가요소 : bgm 재생
     printf("==========한피스 part 2 시작===========\n");
     double pitch;
     double scale;
